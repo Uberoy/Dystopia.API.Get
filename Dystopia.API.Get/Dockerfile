@@ -2,24 +2,24 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy project files with correct relative paths
-COPY ["Dystopia.API.Get/Dystopia.API.Get/Dystopia.API.Get.csproj", "Dystopia.API.Get/Dystopia.API.Get/"]
+# Copy the project file
+COPY ["Dystopia.API.Get.csproj", "./"]
 
 # Restore dependencies
-RUN dotnet restore "Dystopia.API.Get/Dystopia.API.Get/Dystopia.API.Get.csproj"
+RUN dotnet restore "Dystopia.API.Get.csproj"
 
-# Copy the full solution
+# Copy the rest of the solution
 COPY . .
 
-# Build all projects
-RUN dotnet build "Dystopia.API.Get/Dystopia.API.Get/Dystopia.API.Get.csproj" -c Release
+# Build the project
+RUN dotnet build "Dystopia.API.Get.csproj" -c Release
 
-# Stage 3: Publish Dystopia
+# Stage 2: Publish Dystopia
 FROM build AS publish
-WORKDIR /src/Dystopia.API.Get
-RUN dotnet publish "Dystopia.API.Get/Dystopia.API.Get.csproj" -c Release -o /app/publish /p:UseAppHost=false
+WORKDIR /src
+RUN dotnet publish "Dystopia.API.Get.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Stage 4: Final runtime image for Dystopia
+# Stage 3: Final runtime image for Dystopia
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
