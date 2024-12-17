@@ -19,14 +19,11 @@ var app = builder.Build();
 
 app.UseCors("Support");
 
-// Forward query parameters to the repository's /tickets endpoint
 app.MapGet("/tickets", async (HttpContext context) =>
 {
-    // Retrieve query parameters
     var start = context.Request.Query["start"];
     var count = context.Request.Query["count"];
 
-    // Validate the parameters (optional)
     if (!int.TryParse(start, out var startValue) || !int.TryParse(count, out var countValue))
     {
         return Results.BadRequest("Invalid 'start' or 'count' query parameter.");
@@ -38,14 +35,12 @@ app.MapGet("/tickets", async (HttpContext context) =>
         BaseAddress = new Uri(repoUri)
     };
 
-    // Forward the request to the repository service
     var response = await httpClient.GetAsync($"/tickets?start={start}&count={count}");
     if (!response.IsSuccessStatusCode)
     {
         return Results.StatusCode((int)response.StatusCode);
     }
 
-    // Return the data from the repository service
     var data = await response.Content.ReadAsStringAsync();
     return Results.Content(data, "application/json");
 });
