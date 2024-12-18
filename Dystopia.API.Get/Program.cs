@@ -5,12 +5,14 @@ builder.WebHost.UseUrls("http://0.0.0.0:5952");
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add CORS policy
 builder.Services
     .AddCors(options =>
         options.AddPolicy(
             "Support",
             policy =>
                 policy
+                    .WithOrigins("http://localhost:7777", "http://localhost:7151", "http://localhost:7173") // Explicit origins
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
@@ -19,17 +21,8 @@ builder.Services
 
 var app = builder.Build();
 
-// Enable CORS for all routes
+// Ensure CORS middleware runs early in the pipeline
 app.UseCors("Support");
-
-// Ensure to respond to OPTIONS requests manually
-app.MapMethods("/tickets", new[] { "OPTIONS" }, (HttpContext context) =>
-{
-    context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-    context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Origin, X-Requested-With");
-    return Results.Ok();
-});
 
 app.UseSwagger();
 app.UseSwaggerUI();
