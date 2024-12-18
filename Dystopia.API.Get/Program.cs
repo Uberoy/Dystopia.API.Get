@@ -11,7 +11,7 @@ builder.Services
             "Support",
             policy =>
                 policy
-                    .WithOrigins("https://localhost:7151", "https://localhost:7173")
+                    .WithOrigins("https://localhost:7151", "https://localhost:7173", "https://localhost:7777")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
