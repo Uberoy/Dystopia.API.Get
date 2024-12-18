@@ -20,7 +20,17 @@ builder.Services
 
 var app = builder.Build();
 
+// Enable CORS for all routes
 app.UseCors("Support");
+
+// Ensure to respond to OPTIONS requests manually
+app.MapMethods("/tickets", new[] { "OPTIONS" }, (HttpContext context) =>
+{
+    context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+    context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Origin, X-Requested-With");
+    return Results.Ok();
+});
 
 app.UseSwagger();
 app.UseSwaggerUI();
