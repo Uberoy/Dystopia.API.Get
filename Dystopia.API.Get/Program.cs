@@ -5,14 +5,13 @@ builder.WebHost.UseUrls("http://0.0.0.0:5952");
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add CORS policy
 builder.Services
     .AddCors(options =>
         options.AddPolicy(
             "Support",
             policy =>
                 policy
-                    .WithOrigins("http://localhost:7777", "http://localhost:7151", "http://localhost:7173") // Explicit origins
+                    .WithOrigins("http://localhost:7777")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
@@ -21,7 +20,6 @@ builder.Services
 
 var app = builder.Build();
 
-// Ensure CORS middleware runs early in the pipeline
 app.UseCors("Support");
 
 app.UseSwagger();
