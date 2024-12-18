@@ -11,7 +11,7 @@ builder.Services
             "Support",
             policy =>
                 policy
-                    .WithOrigins("https://localhost:7151", "https://localhost:7173", "https://localhost:7777")
+                    .WithOrigins("https://localhost:7151", "https://localhost:7173", "https://localhost:7777") // Add your frontend origin(s)
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
@@ -20,9 +20,10 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseCors("Support");
+
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseCors("Support");
 
 app.MapGet("/tickets", async (HttpContext context) =>
 {
