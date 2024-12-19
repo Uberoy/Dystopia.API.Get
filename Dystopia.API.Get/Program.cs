@@ -35,7 +35,7 @@ app.MapGet("/tickets", async (HttpContext context) =>
         return Results.BadRequest("Invalid 'start' or 'count' query parameter.");
     }
 
-    var repoUri = Environment.GetEnvironmentVariable("REPO_URI") ?? "http://repo:6050";
+    var repoUri = Environment.GetEnvironmentVariable("REPO_URI") ?? "http://repo:5050";
     using var httpClient = new HttpClient
     {
         BaseAddress = new Uri(repoUri)
